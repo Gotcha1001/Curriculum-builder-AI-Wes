@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Business Plan AI",
+  title: "Course Make AI",
   description:
-    "Create any business plan with AI and see your calculations and displayed in a beautiful layout",
+    "Turn any topic into a paced, structured course with AI — from complete beginner to advanced, broken into modules and lessons that fit your schedule.",
 };
 
 export default function RootLayout({
