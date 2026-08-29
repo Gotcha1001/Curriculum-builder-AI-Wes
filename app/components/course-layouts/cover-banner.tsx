@@ -13,11 +13,19 @@
 // full-width colored hero + an always-expanded flowing module list with a
 // left accent border, so the two options in the layout picker actually feel
 // different rather than being the same layout with a different name.
+//
+// UPDATED: swapped the lone "Download syllabus PDF" link for
+// CourseExportMenu, which offers PDF + SCORM from the same trigger. Note
+// the trigger renders as a plain outline button (see CourseExportMenu) --
+// it no longer gets the `variant="secondary"` treatment the old anchor's
+// Button had, which mattered here since this hero sits on a solid color
+// background. If the outline trigger doesn't read clearly against
+// theme.web.button's background, that's the thing to revisit.
 "use client";
 
 import { motion } from "framer-motion";
 import { Clock, ListChecks } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { ReadinessBadge } from "../readiness-badge";
 import type { CourseLayoutProps } from "./types";
@@ -29,6 +37,7 @@ export function CoverBannerLayout({
   course,
   version,
   pdfUrl,
+  scormUrl,
 }: CourseLayoutProps) {
   const data = prepareCourseData(course, version);
   const {
@@ -90,9 +99,7 @@ export function CoverBannerLayout({
           </div>
         )}
         <div className="flex justify-center mt-6">
-          <a href={pdfUrl}>
-            <Button variant="secondary">Download syllabus PDF</Button>
-          </a>
+          <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
         </div>
       </motion.div>
 

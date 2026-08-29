@@ -13,6 +13,10 @@
 // Every layout MUST treat `progress` as absent-safe (render pacing/budget
 // only, skip completion stats) rather than assuming it's always there.
 //
+// UPDATED: added `scormUrl`, mirroring `pdfUrl` -- resolved once by
+// course-preview.tsx and threaded through to every layout so each one
+// can render CourseExportMenu (PDF + SCORM) instead of a lone PDF link.
+//
 // TRANSFORMED FROM: components/plan-layouts/types.ts
 import type { Doc } from "@/convex/_generated/dataModel";
 
@@ -20,5 +24,6 @@ export interface CourseLayoutProps {
   course: Doc<"courses">;
   version: Doc<"courseVersions">;
   pdfUrl: string;
+  scormUrl: string;
   progress?: Doc<"progress">[];
 }

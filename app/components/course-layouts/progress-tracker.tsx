@@ -17,6 +17,9 @@
 //      the contract in course-layouts/types.ts). Anonymous/PDF contexts
 //      fall back to a simple CTA instead of a fake 0% ring, so we're never
 //      showing a number that isn't real.
+//
+// UPDATED: swapped the lone "Download syllabus PDF" link for
+// CourseExportMenu, which offers PDF + SCORM from the same trigger.
 "use client";
 
 import { motion } from "framer-motion";
@@ -31,7 +34,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Button } from "@/components/ui/button";
+import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { getChartPalette } from "@/lib/chart-theme";
 import { ReadinessBadge } from "../readiness-badge";
@@ -41,6 +44,7 @@ export function ProgressTrackerLayout({
   course,
   version,
   pdfUrl,
+  scormUrl,
   progress,
 }: CourseLayoutProps) {
   const data = prepareCourseData(course, version);
@@ -143,9 +147,7 @@ export function ProgressTrackerLayout({
           </div>
         )}
         <div className="flex justify-center my-6">
-          <a href={pdfUrl}>
-            <Button className={theme.web.button}>Download syllabus PDF</Button>
-          </a>
+          <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
         </div>
       </div>
 
