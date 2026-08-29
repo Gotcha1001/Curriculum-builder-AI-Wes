@@ -7,6 +7,11 @@
 // exports whatever version is currently "active" (pointed at by
 // course.activeVersionId), matching what a learner following the
 // /course/[shareId] link would see.
+//
+// FIXED: Next.js 15 made route `params` a Promise -- it must be awaited
+// before its properties are read. The old synchronous `{ params: { courseId: string } }`
+// typing fails the build against Next 15's generated route types (same
+// error as the [shareId] SCORM route hit).
 
 import { NextRequest, NextResponse } from "next/server";
 import { fetchQuery } from "convex/nextjs";
@@ -19,9 +24,10 @@ export const runtime = "nodejs"; // required: buildScormPackage() reads a file f
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { courseId: string } },
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
-  const courseId = params.courseId as Id<"courses">;
+  const { courseId: rawCourseId } = await params;
+  const courseId = rawCourseId as Id<"courses">;
 
   // getCourseWithActiveVersion calls requireUser() on the Convex side,
   // which needs ctx.auth.getUserIdentity() to resolve. Unlike the
