@@ -45,7 +45,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { StyleSelect } from "@/app/components/style-select";
 import { LayoutSelect } from "@/app/components/layout-select";
-import { DEFAULT_PLAN_STYLE_ID } from "@/lib/styles";
+import { DEFAULT_COURSE_STYLE_ID } from "@/lib/styles";
 import { getCourseLayoutMeta } from "@/lib/course-layouts";
 import { toast } from "sonner";
 
@@ -107,7 +107,7 @@ export function CourseVersionEditForm({
 
   const [saving, setSaving] = useState(false);
   const [style, setStyle] = useState<string>(
-    currentStyle ?? DEFAULT_PLAN_STYLE_ID,
+    currentStyle ?? DEFAULT_COURSE_STYLE_ID,
   );
   const [layout, setLayout] = useState<string>(
     getCourseLayoutMeta(currentLayout).id,
