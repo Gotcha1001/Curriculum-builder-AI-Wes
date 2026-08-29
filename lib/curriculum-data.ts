@@ -30,25 +30,23 @@ import type {
   GeneratedLesson,
   GeneratedModule,
 } from "./curriculum-types";
-import {
-  PLAN_STYLES,
-  DEFAULT_PLAN_STYLE_ID,
-  type PlanStyleTheme,
-} from "./styles";
+import { COURSE_STYLES, DEFAULT_COURSE_STYLE_ID } from "./styles";
 
 type Course = Doc<"courses">;
 type CourseVersion = Doc<"courseVersions">;
 
-// Reusing the plan app's theme system as-is (it's pure cosmetics -- see
-// lib/styles.ts). Aliased here so course-facing files don't read "Plan"
-// in their imports.
-export type CourseStyleTheme = PlanStyleTheme;
+// lib/styles.ts now exports CourseStyleTheme natively (it used to be
+// PlanStyleTheme, aliased here) -- re-exported so anything importing
+// `CourseStyleTheme` from *this* module doesn't need to change its
+// import path too.
+export type { CourseStyleTheme } from "./styles";
+import type { CourseStyleTheme } from "./styles";
 
 function getCourseTheme(styleId: string | undefined | null): CourseStyleTheme {
   return (
-    PLAN_STYLES.find((s) => s.id === styleId) ??
-    PLAN_STYLES.find((s) => s.id === DEFAULT_PLAN_STYLE_ID) ??
-    PLAN_STYLES[0]
+    COURSE_STYLES.find((s) => s.id === styleId) ??
+    COURSE_STYLES.find((s) => s.id === DEFAULT_COURSE_STYLE_ID) ??
+    COURSE_STYLES[0]
   );
 }
 

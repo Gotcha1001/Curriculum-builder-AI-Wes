@@ -1,6 +1,9 @@
 // app/(dashboard)/dashboard/settings/page.tsx
+//
+// FIXED: the "Manage your account and how ___ looks" line still hardcoded
+// "CV Make AI". Now pulls APP_NAME from lib/brand.ts like Navbar.tsx and
+// AppSidebar.tsx already do, so this can't drift again on the next rename.
 "use client";
-
 import { UserProfile, useUser } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
@@ -22,12 +25,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-
+import { APP_NAME } from "@/lib/brand";
 export default function SettingsPage() {
   const { user: clerkUser } = useUser();
   const dbUser = useUserContext();
   const { theme, setTheme } = useTheme();
-
   return (
     <div className="relative isolate min-h-screen overflow-hidden">
       {/* Full-bleed background photo, faded so text stays readable —
@@ -48,7 +50,6 @@ export default function SettingsPage() {
           out, so the wash carries most of the depth and the image opacity
           above is raised too so it doesn't disappear entirely. */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-indigo-950/30 via-slate-900/20 to-purple-950/35 dark:from-indigo-950/40 dark:via-black/60 dark:to-purple-950/30 pointer-events-none" />
-
       <div className="relative z-10 max-w-2xl mx-auto space-y-8 px-6 pt-16 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -59,10 +60,9 @@ export default function SettingsPage() {
             Settings
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage your account and how CV Make AI looks.
+            Manage your account and how {APP_NAME} looks.
           </p>
         </motion.div>
-
         <Card className="bg-white/60 dark:bg-white/5">
           <CardHeader>
             <CardTitle>Account</CardTitle>
@@ -91,12 +91,11 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
-
         <Card className="bg-white/60 dark:bg-white/5">
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
             <CardDescription>
-              Choose how CV Make AI looks on this device.
+              Choose how {APP_NAME} looks on this device.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -115,7 +114,6 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
-
         {/* Deliberately not a Card — Clerk's UserProfile ships its own
             panelled UI (its own borders, background, and internal nav),
             so wrapping it in another bordered box just fights Clerk for
@@ -131,7 +129,6 @@ export default function SettingsPage() {
           </p>
         </div>
       </div>
-
       {/* Full-width, outside the max-w-2xl column above, so Clerk's
           UserProfile can lay out at whatever width it needs instead of
           being squeezed into the settings column. */}
