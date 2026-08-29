@@ -11,13 +11,16 @@
 //
 // Same data source as every other course layout: lib/curriculum-data.ts's
 // prepareCourseData().
+//
+// UPDATED: swapped the lone "Download syllabus PDF" link for
+// CourseExportMenu, which offers PDF + SCORM from the same trigger.
 
 "use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Clock, ListChecks } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { ReadinessBadge } from "../readiness-badge";
 import type { CourseLayoutProps } from "./types";
@@ -163,6 +166,7 @@ export function SyllabusFirstLayout({
   course,
   version,
   pdfUrl,
+  scormUrl,
 }: CourseLayoutProps) {
   const data = prepareCourseData(course, version);
   const {
@@ -226,9 +230,7 @@ export function SyllabusFirstLayout({
           </div>
         )}
         <div className="flex justify-center my-6">
-          <a href={pdfUrl}>
-            <Button className={theme.web.button}>Download syllabus PDF</Button>
-          </a>
+          <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
         </div>
       </div>
 

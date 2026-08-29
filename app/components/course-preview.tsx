@@ -4,6 +4,11 @@
 // is active, so progress-tracker.tsx (and any future layout that wants
 // completion data) can render it. Every other layout ignores the prop
 // harmlessly since it's optional on CourseLayoutProps.
+//
+// UPDATED: also resolves `scormUrl` the same way `pdfUrl` already was --
+// a shareId-keyed public route, `/api/course/${course.shareId}/export/scorm`
+// -- and passes it down alongside pdfUrl so every layout can offer both
+// downloads via CourseExportMenu.
 "use client";
 
 import { motion } from "framer-motion";
@@ -40,6 +45,7 @@ export function CourseAnimatedView({
   progress?: Doc<"progress">[];
 }) {
   const resolvedPdfUrl = pdfUrl ?? `/api/course/${course.shareId}/pdf`;
+  const resolvedScormUrl = `/api/course/${course.shareId}/export/scorm`;
 
   if (course.status === "generating" || course.status === "draft" || !version) {
     return (
@@ -77,6 +83,7 @@ export function CourseAnimatedView({
       course={course}
       version={version}
       pdfUrl={resolvedPdfUrl}
+      scormUrl={resolvedScormUrl}
       progress={progress}
     />
   );

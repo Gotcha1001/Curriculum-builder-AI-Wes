@@ -19,12 +19,15 @@
 // outer scope for the same array, so this rename also removes an
 // accidental implicit shadow-of-a-shadow that would have shown up the
 // moment someone added a nested lessons map using the same name.
+//
+// UPDATED: swapped the lone "Download syllabus PDF" link for
+// CourseExportMenu, which offers PDF + SCORM from the same trigger.
 "use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Clock, ListChecks } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { ReadinessBadge } from "../readiness-badge";
 import type { CourseLayoutProps } from "./types";
@@ -33,6 +36,7 @@ export function ModuleRoadmapLayout({
   course,
   version,
   pdfUrl,
+  scormUrl,
 }: CourseLayoutProps) {
   const data = prepareCourseData(course, version);
   const {
@@ -91,9 +95,7 @@ export function ModuleRoadmapLayout({
           </div>
         )}
         <div className="flex justify-center my-5">
-          <a href={pdfUrl}>
-            <Button className={theme.web.button}>Download syllabus PDF</Button>
-          </a>
+          <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
         </div>
       </div>
 

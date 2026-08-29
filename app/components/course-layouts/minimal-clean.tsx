@@ -19,10 +19,13 @@
 // section did: a one-line score, then flags only (no suggestions) --
 // syllabus-first.tsx is already the "full readiness detail" option, this
 // one stays minimal on purpose so the two layouts don't converge.
+//
+// UPDATED: swapped the lone "Download PDF" link for CourseExportMenu,
+// which offers PDF + SCORM from the same trigger.
 
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import type { CourseLayoutProps } from "./types";
 
@@ -30,6 +33,7 @@ export function MinimalCleanLayout({
   course,
   version,
   pdfUrl,
+  scormUrl,
 }: CourseLayoutProps) {
   const {
     g,
@@ -71,11 +75,7 @@ export function MinimalCleanLayout({
             )}
           </p>
         </div>
-        <a href={pdfUrl}>
-          <Button variant="outline" size="sm">
-            Download PDF
-          </Button>
-        </a>
+        <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
       </div>
 
       {readiness && (
