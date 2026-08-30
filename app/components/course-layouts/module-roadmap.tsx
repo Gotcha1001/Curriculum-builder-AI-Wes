@@ -22,6 +22,10 @@
 //
 // UPDATED: swapped the lone "Download syllabus PDF" link for
 // CourseExportMenu, which offers PDF + SCORM from the same trigger.
+//
+// UPDATED: threaded `wordUrl` through to CourseExportMenu alongside
+// pdfUrl and scormUrl -- same two-line change as every other layout, now
+// that CourseLayoutProps requires it.
 "use client";
 
 import { useState } from "react";
@@ -37,6 +41,7 @@ export function ModuleRoadmapLayout({
   version,
   pdfUrl,
   scormUrl,
+  wordUrl,
 }: CourseLayoutProps) {
   const data = prepareCourseData(course, version);
   const {
@@ -95,7 +100,11 @@ export function ModuleRoadmapLayout({
           </div>
         )}
         <div className="flex justify-center my-5">
-          <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
+          <CourseExportMenu
+            pdfUrl={pdfUrl}
+            scormUrl={scormUrl}
+            wordUrl={wordUrl}
+          />
         </div>
       </div>
 

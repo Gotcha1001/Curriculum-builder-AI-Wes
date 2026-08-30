@@ -67,6 +67,7 @@ const courseFields = {
   startLevel: SKILL_LEVELS,
   targetLevel: SKILL_LEVELS,
   hoursPerWeek: v.optional(v.number()),
+  weeks: v.optional(v.number()),
   learningStyle: v.optional(
     v.array(
       v.union(

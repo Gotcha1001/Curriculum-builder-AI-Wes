@@ -21,6 +21,10 @@
 // Button had, which mattered here since this hero sits on a solid color
 // background. If the outline trigger doesn't read clearly against
 // theme.web.button's background, that's the thing to revisit.
+//
+// UPDATED: threaded `wordUrl` through to CourseExportMenu alongside pdfUrl
+// and scormUrl -- same two-line change as every other layout, now that
+// CourseLayoutProps requires it.
 "use client";
 
 import { motion } from "framer-motion";
@@ -38,6 +42,7 @@ export function CoverBannerLayout({
   version,
   pdfUrl,
   scormUrl,
+  wordUrl,
 }: CourseLayoutProps) {
   const data = prepareCourseData(course, version);
   const {
@@ -99,7 +104,11 @@ export function CoverBannerLayout({
           </div>
         )}
         <div className="flex justify-center mt-6">
-          <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
+          <CourseExportMenu
+            pdfUrl={pdfUrl}
+            scormUrl={scormUrl}
+            wordUrl={wordUrl}
+          />
         </div>
       </motion.div>
 
