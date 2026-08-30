@@ -22,6 +22,10 @@
 //
 // UPDATED: swapped the lone "Download PDF" link for CourseExportMenu,
 // which offers PDF + SCORM from the same trigger.
+//
+// UPDATED: threaded `wordUrl` through to CourseExportMenu alongside
+// pdfUrl and scormUrl -- same two-line change as every other layout, now
+// that CourseLayoutProps requires it.
 
 "use client";
 
@@ -34,6 +38,7 @@ export function MinimalCleanLayout({
   version,
   pdfUrl,
   scormUrl,
+  wordUrl,
 }: CourseLayoutProps) {
   const {
     g,
@@ -75,7 +80,11 @@ export function MinimalCleanLayout({
             )}
           </p>
         </div>
-        <CourseExportMenu pdfUrl={pdfUrl} scormUrl={scormUrl} />
+        <CourseExportMenu
+          pdfUrl={pdfUrl}
+          scormUrl={scormUrl}
+          wordUrl={wordUrl}
+        />
       </div>
 
       {readiness && (

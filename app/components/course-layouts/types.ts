@@ -25,5 +25,6 @@ export interface CourseLayoutProps {
   version: Doc<"courseVersions">;
   pdfUrl: string;
   scormUrl: string;
+  wordUrl: string;
   progress?: Doc<"progress">[];
 }

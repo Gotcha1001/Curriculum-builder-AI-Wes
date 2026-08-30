@@ -9,6 +9,12 @@
 // a shareId-keyed public route, `/api/course/${course.shareId}/export/scorm`
 // -- and passes it down alongside pdfUrl so every layout can offer both
 // downloads via CourseExportMenu.
+//
+// UPDATED: resolves `wordUrl` the same way -- third shareId-keyed public
+// route, `/api/course/${course.shareId}/export/word` -- so CourseExportMenu
+// can offer the editable .docx download alongside PDF and SCORM. Always
+// resolved here rather than accepted as a prop (unlike pdfUrl), same as
+// scormUrl already is -- no caller has ever needed to override it.
 "use client";
 
 import { motion } from "framer-motion";
@@ -46,6 +52,7 @@ export function CourseAnimatedView({
 }) {
   const resolvedPdfUrl = pdfUrl ?? `/api/course/${course.shareId}/pdf`;
   const resolvedScormUrl = `/api/course/${course.shareId}/export/scorm`;
+  const resolvedWordUrl = `/api/course/${course.shareId}/export/word`;
 
   if (course.status === "generating" || course.status === "draft" || !version) {
     return (
@@ -84,6 +91,7 @@ export function CourseAnimatedView({
       version={version}
       pdfUrl={resolvedPdfUrl}
       scormUrl={resolvedScormUrl}
+      wordUrl={resolvedWordUrl}
       progress={progress}
     />
   );
