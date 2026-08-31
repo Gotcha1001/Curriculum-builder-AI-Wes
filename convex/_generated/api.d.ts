@@ -10,6 +10,7 @@
 
 import type * as ai from "../ai.js";
 import type * as courses from "../courses.js";
+import type * as tavily from "../tavily.js";
 import type * as user from "../user.js";
 
 import type {
@@ -21,6 +22,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   courses: typeof courses;
+  tavily: typeof tavily;
   user: typeof user;
 }>;
 

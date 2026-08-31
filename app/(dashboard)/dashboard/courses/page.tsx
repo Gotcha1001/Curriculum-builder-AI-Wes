@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import type { Doc } from "@/convex/_generated/dataModel";
+import type { Doc, Id } from "@/convex/_generated/dataModel";
 
 // Rotated while a course is generating so the modal feels alive.
 const GENERATING_MESSAGES = [
@@ -308,6 +308,7 @@ export default function MyCoursesPage() {
                     >
                       Copy link
                     </Button>
+                    <CourseLinksButton courseId={course._id} />
                   </>
                 )}
 
@@ -363,5 +364,44 @@ export default function MyCoursesPage() {
         />
       </div>
     </div>
+  );
+}
+
+function CourseLinksButton({ courseId }: { courseId: Id<"courses"> }) {
+  const meta = useQuery(api.courses.getActiveVersionLinksMeta, { courseId });
+  const findLessonLinks = useAction(api.tavily.findLessonLinks);
+  const [running, setRunning] = useState(false);
+
+  const status = meta?.linksStatus ?? "idle";
+  const busy = running || status === "finding";
+
+  async function handleClick() {
+    setRunning(true);
+    try {
+      await findLessonLinks({ courseId });
+      toast.success("Lesson links updated");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't find links");
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      disabled={busy}
+      className={busy ? "animate-pulse" : ""}
+      onClick={handleClick}
+    >
+      {busy
+        ? "Finding links…"
+        : status === "ready"
+          ? "Regenerate links"
+          : status === "failed"
+            ? "Retry links"
+            : "Find lesson links"}
+    </Button>
   );
 }

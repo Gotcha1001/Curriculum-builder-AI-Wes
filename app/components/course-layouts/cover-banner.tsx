@@ -25,6 +25,13 @@
 // UPDATED: threaded `wordUrl` through to CourseExportMenu alongside pdfUrl
 // and scormUrl -- same two-line change as every other layout, now that
 // CourseLayoutProps requires it.
+//
+// UPDATED: added LessonResourceLink under each lesson's meta row. This
+// hero sits on a solid accent background but the module list below it is
+// plain background, so the link needs an explicit hex color rather than a
+// theme.web.heading text class (that class is tuned for dark-on-light
+// headings, not link text) -- same reasoning as progress-tracker.tsx,
+// which is why both get `color={palette.primary}` instead of `className`.
 "use client";
 
 import { motion } from "framer-motion";
@@ -32,7 +39,10 @@ import { Clock, ListChecks } from "lucide-react";
 import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { ReadinessBadge } from "../readiness-badge";
+
+import { getChartPalette } from "@/lib/chart-theme";
 import type { CourseLayoutProps } from "./types";
+import { LessonResourceLink } from "./lesson-resource-link";
 
 const LEVEL_PILL_ON_BANNER =
   "text-xs px-3 py-1 rounded-full capitalize bg-white/15 text-white backdrop-blur-sm";
@@ -60,6 +70,7 @@ export function CoverBannerLayout({
     totalLessonCount,
     totalEstimatedMinutes,
   } = data;
+  const palette = getChartPalette(theme);
 
   const kpis: { label: string; value: string }[] = [
     { label: "Modules", value: String(totalModuleCount) },
@@ -90,7 +101,7 @@ export function CoverBannerLayout({
         )}
         <div className="flex flex-wrap justify-center gap-2 mt-4">
           <span className={LEVEL_PILL_ON_BANNER}>
-            {startLevel} &rarr; {targetLevel}
+            {startLevel} → {targetLevel}
           </span>
           {hoursPerWeek !== undefined && (
             <span className={LEVEL_PILL_ON_BANNER}>
@@ -196,6 +207,10 @@ export function CoverBannerLayout({
                           </span>
                         )}
                       </div>
+                      <LessonResourceLink
+                        link={version.lessonLinks?.[lesson.key]}
+                        color={palette.primary}
+                      />
                     </div>
                   </li>
                 ))}

@@ -29,6 +29,7 @@ import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { ReadinessBadge } from "../readiness-badge";
 import type { CourseLayoutProps } from "./types";
 import type { GeneratedModule } from "@/lib/curriculum-types";
+import { LessonResourceLink } from "./lesson-resource-link";
 
 /** Soft theme-coloured hover fill -- pure Tailwind, no extra files needed */
 const CARD_HOVER: Record<string, string> = {
@@ -57,11 +58,13 @@ function ModuleCard({
   index,
   theme,
   defaultOpen,
+  version,
 }: {
   module: GeneratedModule;
   index: number;
   theme: ReturnType<typeof prepareCourseData>["theme"];
   defaultOpen: boolean;
+  version: CourseLayoutProps["version"];
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const cardHover = CARD_HOVER[theme.id] ?? CARD_HOVER.neutral;
@@ -154,6 +157,10 @@ function ModuleCard({
                           </span>
                         )}
                       </div>
+                      <LessonResourceLink
+                        link={version.lessonLinks?.[lesson.key]}
+                        className={theme.web.heading}
+                      />
                     </div>
                   </li>
                 ))}
@@ -288,6 +295,7 @@ export function SyllabusFirstLayout({
             index={i}
             theme={theme}
             defaultOpen={i === 0}
+            version={version}
           />
         ))}
       </div>
