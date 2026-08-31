@@ -35,6 +35,7 @@ import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { ReadinessBadge } from "../readiness-badge";
 import type { CourseLayoutProps } from "./types";
+import { LessonResourceLink } from "./lesson-resource-link";
 
 export function ModuleRoadmapLayout({
   course,
@@ -211,6 +212,9 @@ export function ModuleRoadmapLayout({
                         </span>
                       )}
                     </div>
+                    <LessonResourceLink
+                      link={version.lessonLinks?.[lesson.key]}
+                    />
                   </div>
                 </li>
               ))}

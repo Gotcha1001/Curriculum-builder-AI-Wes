@@ -1,18 +1,3 @@
-// convex/courses.ts
-//
-// TRANSFORMED FROM: convex/businessPlans.ts (itself transformed from convex/cvs.ts)
-// Same shape: upsert the raw-input draft, an action (ai.ts) generates a
-// version, versions are append-only and one is "active" (used for the
-// public share link + PDF/syllabus export).
-//
-// A "course" here is the container (topic, level range, pacing). The actual
-// generated module -> lesson -> exercise tree lives inside
-// courseVersions.generatedContent as structured JSON, exactly the way
-// businessPlanVersions stored the 10 plan sections. Regenerating the
-// curriculum (e.g. "make it more hands-on" or "add a week") appends a new
-// version instead of overwriting the old one, so a learner mid-course never
-// has their in-progress version silently rewritten.
-
 import { v } from "convex/values";
 import {
   mutation,
@@ -263,6 +248,93 @@ export const _saveGenerationError = internalMutation({
       status: "failed",
       generationError: args.error,
     });
+  },
+});
+
+// --- internal helpers used only by convex/tavily.ts ---
+
+// Actions can't do ctx.db joins directly, so this does the ownership check
+// (by clerkId, since the action only has identity.subject, not a Convex user
+// id) and hands back both the course and its active version in one call.
+export const _getCourseForLinksAction = internalQuery({
+  args: { courseId: v.id("courses"), clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+      .first();
+    if (!user) throw new Error("User record not found");
+    const course = await ctx.db.get(args.courseId);
+    if (!course || course.userId !== user._id) throw new Error("Not found");
+    if (!course.activeVersionId)
+      throw new Error("Course has no generated content yet");
+    const version = await ctx.db.get(course.activeVersionId);
+    if (!version) throw new Error("Active version not found");
+    return { course, version };
+  },
+});
+
+export const _setLinksStatus = internalMutation({
+  args: {
+    versionId: v.id("courseVersions"),
+    status: v.union(
+      v.literal("idle"),
+      v.literal("finding"),
+      v.literal("ready"),
+      v.literal("failed"),
+    ),
+    error: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.versionId, {
+      linksStatus: args.status,
+      linksError: args.error,
+    });
+  },
+});
+
+export const _saveLessonLinks = internalMutation({
+  args: {
+    versionId: v.id("courseVersions"),
+    lessonLinks: v.record(
+      v.string(),
+      v.object({
+        url: v.string(),
+        title: v.string(),
+        resourceType: v.union(
+          v.literal("video"),
+          v.literal("article"),
+          v.literal("scripture"),
+        ),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.versionId, {
+      lessonLinks: args.lessonLinks,
+      linksStatus: "ready",
+      linksUpdatedAt: Date.now(),
+      linksError: undefined,
+    });
+  },
+});
+
+// Light query for the "My Courses" list — just enough to show a status
+// badge/button state without pulling the whole generatedContent tree.
+export const getActiveVersionLinksMeta = query({
+  args: { courseId: v.id("courses") },
+  handler: async (ctx, args) => {
+    const user = await requireUser(ctx);
+    const course = await ctx.db.get(args.courseId);
+    if (!course || course.userId !== user._id || !course.activeVersionId)
+      return null;
+    const version = await ctx.db.get(course.activeVersionId);
+    if (!version) return null;
+    return {
+      linksStatus: version.linksStatus ?? "idle",
+      linksUpdatedAt: version.linksUpdatedAt,
+      linksError: version.linksError,
+    };
   },
 });
 

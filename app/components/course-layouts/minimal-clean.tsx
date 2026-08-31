@@ -26,12 +26,22 @@
 // UPDATED: threaded `wordUrl` through to CourseExportMenu alongside
 // pdfUrl and scormUrl -- same two-line change as every other layout, now
 // that CourseLayoutProps requires it.
-
+//
+// UPDATED: added LessonResourceLink under each lesson row. No color or
+// className passed -- this layout doesn't use theme.web.heading for text
+// anywhere (only theme.web.borderSoft, for the rule underlines), so
+// threading a theme color into the link would be inventing a dependency
+// this file otherwise doesn't have. Falls through to the component's own
+// default (text-blue-600 / dark:text-blue-400), same as module-roadmap.tsx
+// -- fits the "plainest option in the picker" brief better than a themed
+// accent would.
 "use client";
 
 import { CourseExportMenu } from "../course-export-menu";
 import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
+
 import type { CourseLayoutProps } from "./types";
+import { LessonResourceLink } from "./lesson-resource-link";
 
 export function MinimalCleanLayout({
   course,
@@ -73,7 +83,7 @@ export function MinimalCleanLayout({
           )}
           <p className="text-sm text-muted-foreground mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="capitalize">
-              {startLevel} &rarr; {targetLevel}
+              {startLevel} → {targetLevel}
             </span>
             {hoursPerWeek !== undefined && (
               <span>~{hoursPerWeek} hrs/week</span>
@@ -144,7 +154,7 @@ export function MinimalCleanLayout({
           >
             {String(i + 1).padStart(2, "0")}. {module.title}{" "}
             <span className="font-normal normal-case text-muted-foreground">
-              &middot; {module.level}
+              · {module.level}
             </span>
           </h2>
           {module.summary && (
@@ -163,8 +173,11 @@ export function MinimalCleanLayout({
                   <p className="text-xs text-muted-foreground">
                     {formatMinutes(lesson.estimatedMinutes)}
                     {lesson.exercise &&
-                      ` \u00b7 ${lesson.exercise.type.replace("_", " ")}`}
+                      ` · ${lesson.exercise.type.replace("_", " ")}`}
                   </p>
+                  <LessonResourceLink
+                    link={version.lessonLinks?.[lesson.key]}
+                  />
                 </div>
               </li>
             ))}

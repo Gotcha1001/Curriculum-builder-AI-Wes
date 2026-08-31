@@ -340,6 +340,7 @@ import { prepareCourseData, formatMinutes } from "@/lib/curriculum-data";
 import { getChartPalette } from "@/lib/chart-theme";
 import { ReadinessBadge } from "../readiness-badge";
 import type { CourseLayoutProps } from "./types";
+import { LessonResourceLink } from "./lesson-resource-link";
 
 // UPDATED: threaded `wordUrl` through to CourseExportMenu alongside pdfUrl
 // and scormUrl -- same two-line change as every other layout, now that
@@ -736,6 +737,10 @@ export function ProgressTrackerLayout({
                                   {lesson.objectives.join(" · ")}
                                 </p>
                               )}
+                              <LessonResourceLink
+                                link={version.lessonLinks?.[lesson.key]}
+                                color={palette.primary}
+                              />
                             </div>
                           </li>
                         );
